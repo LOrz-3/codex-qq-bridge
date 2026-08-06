@@ -57,8 +57,11 @@
 
 ### 1. 准备 NapCat（一次性）
 
-1. 下载并解压 NapCat（推荐 NapCat.Shell），按官方文档完成小号登录，确认 OneBot WS 服务监听 `127.0.0.1:3001`。
-2. 本仓库不打包 NapCat 本体，只负责与它通信。
+1. 从 NapCat 官方渠道获取（本仓库不打包 NapCat 本体，只负责与它通信）：
+   - GitHub Releases（官方）：<https://github.com/NapNeko/NapCatQQ/releases>
+   - 使用文档：<https://napneko.github.io/guide/boot/Shell.html>
+   - **推荐 Windows 用户下载 `NapCat.Shell.Windows.OneKey.zip`**（无头一键包，内置 QQ + NapCat，解压后运行 `NapCatInstaller.exe` 自动配置）。
+2. 按官方文档完成小号登录，确认 OneBot WS 服务监听 `127.0.0.1:3001`。
 
 ### 2. 安装 bridge
 
