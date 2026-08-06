@@ -136,37 +136,11 @@ Windows 上 NapCat 注入 QQ 需要管理员权限。建议把 NapCat 的启动�
 
 ## 喂给本地 agent 的复现指令
 
-想让你本地的 Codex / Claude Code / 其他 agent 基于本仓库复现或继续开发，直接把下面这段贴给它即可：
+想让本地 Codex / Claude Code 复现或继续开发？直接把下面这段贴给它：
 
 ```text
-请阅读并理解当前这个仓库（Codex QQ Bridge，即本仓库根目录）。
-
-项目目标：让手机 QQ 私聊一个 QQ 小号，即可实时遥控本机桌面 Codex，两边共享同一个会话。
-核心亮点：纯 API、无需 GPT 账号登录、无需魔法、无需第三方网站，只需要 QQ 小号 + 本机 Codex。
-
-架构（三层）：
-1. NapCat（QQNT 的 OneBot 实现，本机进程）：把 QQ 小号消息转成 OneBot 11 标准 API，
-   WebSocket 监听在 127.0.0.1:3001，本仓库不打包 NapCat 本体。
-2. bridge.py（本仓库主程序）：连接 NapCat WS，处理手机命令（#会话/#切/#同步/#日报/#新对话/#日常），
-   通过 Chrome DevTools Protocol（默认 127.0.0.1:9229）读写桌面 Codex 当前会话；
-   后台 watcher 线程把新的助手回复推回 owner 的 QQ；支持文件双向收发与可选项协议。
-3. cdp.py：极简 CDP 客户端，负责与桌面 Codex 调试端口通信。
-
-关键实现细节（务必保留，别改坏）：
-- 配置全部来自 config.json（模板 config.example.json），支持 --config 指定路径；
-  owner_qq 是唯一允许遥控的 QQ，bot_qq 是小号账号，路径字段都有默认回退。
-- 消息注入被桌面输入框的非空内容保护性拒绝时，会提示清空输入框重试，这是有意设计。
-- CDP 不可用时，手机消息落到队列（paths.queue_dir/queue.jsonl），任务读完后要记入
-  consumed 状态，不要重复消费。
-- 回复推送按 1400 字符分块；可选项协议：回复里出现 [1] [2] ... 时存到 choices.json，
-  手机回数字/字母即可选择。
-- 会话列表按 rollout 首行 session_meta 的 session_id 聚合窗口，过滤子线程与老格式。
-
-运行方式：先确认 NapCat 监听 3001、桌面 Codex 的 9229 可访问，然后 python bridge.py
-（无窗口用 pythonw bridge.py）。安装引导见 install.ps1。
-
-风险：NapCat 非 QQ 官方通道，只用小号；本项目仅学习研究用途。
-请先通读 bridge.py / cdp.py / README.md，再回答：你理解了哪些模块，以及复现或扩展时第一步会做什么。
+请先阅读仓库 https://github.com/LOrz-3/codex-qq-bridge 的 README 和源码，
+理解后告诉我：这个项目的架构与核心模块，以及你复现/扩展时第一步会做什么。
 ```
 
 ## 目录结构
