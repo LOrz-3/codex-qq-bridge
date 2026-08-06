@@ -1,0 +1,8 @@
+config.json
+dev-drafts/
+__pycache__/
+*.pyc
+bridge.out.log
+bridge.err.log
+bridge.log
+.DS_Store
