@@ -18,7 +18,7 @@
 
 ## P1：Channel 抽象层（二期核心）
 
-**目标**：`bridge.py` 里 QQ 专属逻辑（OneBot WS 收发、命令解析、文件处理）抽成独立 adapter，核心引擎只依赖统一的 `Channel` 接口。
+**目标**：`qq/bridge.py` 里 QQ 专属逻辑（OneBot WS 收发、命令解析、文件处理）抽成独立 adapter，核心引擎只依赖统一的 `Channel` 接口。
 
 **接口设计（草案）**
 
