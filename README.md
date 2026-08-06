@@ -172,12 +172,17 @@ codex-qq-bridge/
 ├── ROADMAP.md           # 多渠道扩展规划
 ├── LICENSE              # MIT
 ├── .gitignore
-└── qq/                  # QQ 渠道（一期）
-    ├── bridge.py        # 主桥接（配置化）
-    ├── cdp.py           # 极简 CDP 客户端
-    ├── config.example.json
-    ├── install.ps1      # 一键部署脚本
-    └── requirements.txt
+├── core/                # 核心引擎（P1 待启动：Channel 接口 / 会话 / CDP）
+├── qq/                  # QQ 渠道（一期，已实现）
+│   ├── bridge.py        # 主桥接（配置化）
+│   ├── cdp.py           # 极简 CDP 客户端
+│   ├── config.example.json
+│   ├── install.ps1      # 一键部署脚本
+│   └── requirements.txt
+├── mail/                # 邮件渠道（P2 规划中：IMAP/SMTP）
+├── telegram/            # Telegram 渠道（P3 规划中：Bot API）
+├── wecom/               # 企业微信渠道（P4 远期）
+└── feishu/              # 飞书渠道（P4 远期）
 ```
 
 ## 风险声明（务必阅读）
