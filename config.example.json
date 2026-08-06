@@ -23,6 +23,7 @@
       "bot_qq": "小号QQ号"
     },
     "mail": {
+      "_comment": "mail 渠道默认只读（仅推送，不执行收到的邮件指令），防伪造/污染。如需执行，在代码中显式开启 inbound_commands_enabled。",
       "imap_host": "imap.qq.com",
       "imap_port": 993,
       "smtp_host": "smtp.qq.com",
