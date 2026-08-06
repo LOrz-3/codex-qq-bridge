@@ -29,6 +29,9 @@ from core.registry import register
 @register
 class MailChannel(Channel):
     name = "mail"
+    # Email is easy to spoof / pollute; treat as outbound-only by default.
+    # The engine will log inbound mails but never execute their content.
+    inbound_commands_enabled = False
 
     def __init__(self, config=None):
         super().__init__(config)
