@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Publish local changes as a GitHub PR (works when github.com:443 is not
     reachable - everything goes through api.github.com).
@@ -27,7 +27,7 @@ param(
     [Parameter(Mandatory = $true)][string[]]$Files,
     [string]$Branch = "",
     [string]$Title = "docs: update",
-    [string]$Body = "Automated update via publish-pr.ps1",
+    [string]$PrBody = "Automated update via publish-pr.ps1",
     [string]$Base = "main",
     [string]$Repo = "LOrz-3/codex-qq-bridge",
     [string]$Token = ""
@@ -71,16 +71,16 @@ foreach ($f in $Files) {
     $local = Join-Path $Root ($f -replace "/", "\")
     if (-not (Test-Path -LiteralPath $local)) { Write-Host "[skip] missing: $f" -ForegroundColor Yellow; continue }
     $content = [Convert]::ToBase64String([IO.File]::ReadAllBytes($local))
-    $body = @{ message = $Title; content = $content; branch = $Branch }
+    $fileBody = @{ message = $Title; content = $content; branch = $Branch }
     try {
-        $cur = Invoke-Gh "GET" "/contents/$f?ref=$Branch"
-        $body.sha = $cur.sha
+        $cur = Invoke-Gh "GET" ("/contents/{0}?ref={1}" -f $f, $Branch)
+        $fileBody.sha = $cur.sha
     } catch { }
-    $null = Invoke-Gh "PUT" "/contents/$f" $body
+    $null = Invoke-Gh "PUT" "/contents/$f" $fileBody
     Write-Host "      uploaded: $f" -ForegroundColor Green
 }
 
 # 4. open PR
-$pr = Invoke-Gh "POST" "/pulls" @{ title = $Title; head = $Branch; base = $Base; body = $Body }
+$pr = Invoke-Gh "POST" "/pulls" @{ title = $Title; head = $Branch; base = $Base; body = $PrBody }
 Write-Host "[4/4] PR: $($pr.html_url)" -ForegroundColor Cyan
 Write-Host "      number=$($pr.number) state=$($pr.state)" -ForegroundColor Green
