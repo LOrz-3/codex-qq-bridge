@@ -80,7 +80,14 @@ foreach ($f in $Files) {
     Write-Host "      uploaded: $f" -ForegroundColor Green
 }
 
-# 4. open PR
-$pr = Invoke-Gh "POST" "/pulls" @{ title = $Title; head = $Branch; base = $Base; body = $PrBody }
-Write-Host "[4/4] PR: $($pr.html_url)" -ForegroundColor Cyan
-Write-Host "      number=$($pr.number) state=$($pr.state)" -ForegroundColor Green
+# 4. open PR (or update the existing one with the same head/base)
+$existing = Invoke-Gh "GET" "/pulls?head=$Repo`:$Branch&state=open"
+if ($existing -and $existing.Count -gt 0) {
+    $pr = $existing[0]
+    $null = Invoke-Gh "PATCH" ("/pulls/" + $pr.number) @{ title = $Title; body = $PrBody }
+    Write-Host "[4/4] PR updated: $($pr.html_url) (existing #$($pr.number))" -ForegroundColor Cyan
+} else {
+    $pr = Invoke-Gh "POST" "/pulls" @{ title = $Title; head = $Branch; base = $Base; body = $PrBody }
+    Write-Host "[4/4] PR: $($pr.html_url)" -ForegroundColor Cyan
+    Write-Host "      number=$($pr.number) state=$($pr.state)" -ForegroundColor Green
+}
