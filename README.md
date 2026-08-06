@@ -32,14 +32,15 @@
 
 ## 渠道扩展规划（Roadmap）
 
-当前一期只实现 **QQ 渠道**（NapCat / OneBot 11）。以下渠道已论证可行，规划在二期按 Channel 适配器架构加入，无需改动核心引擎（会话管理 / CDP / 队列 / 可选项协议全部复用）：
+项目采用 **Channel 适配器架构**：核心引擎（`core/`）与消息渠道解耦，任意渠道实现统一接口即可接入，会话管理 / CDP / 队列 / 可选项协议全部复用。已实现 5 个渠道：
 
 | 渠道 | 状态 | 实现方式 | 说明 |
 |---|---|---|---|
-| QQ（NapCat / OneBot 11） | ✅ 一期已实现 | OneBot 11 WebSocket | 实时，非官方通道，仅用小号 |
-| 邮件（QQ 邮箱 IMAP/SMTP） | 📋 规划中 | IMAP 轮询 + SMTP 发送（标准库） | 官方、零封号风险、分钟级延迟；适合日报 / 通知 / 异步指令 |
-| Telegram Bot | 📋 规划中 | 官方 Bot API（长轮询 + 收发文件） | 实时 + 可选项按钮，体验最佳；国内需魔法，面向海外用户 |
-| 企业微信 / 飞书 | 💡 远期 | 官方 API（机器人 / 自建应用） | 国内官方正规渠道，10 人以下小团队可用 |
+| QQ（NapCat / OneBot 11） | ✅ 已实现 | OneBot 11 WebSocket（`qq/qq_channel.py`） | 实时，非官方通道，仅用小号 |
+| 邮件（QQ 邮箱 IMAP/SMTP） | ✅ 已实现 | 标准库 `imaplib`/`smtplib`（`mail/mail_channel.py`） | 官方、零封号风险、分钟级延迟；适合日报 / 通知 / 异步指令 |
+| Telegram Bot | ✅ 已实现 | 官方 Bot API 长轮询（`telegram/telegram_channel.py`） | 实时 + 可选项按钮，体验最佳；国内需魔法，面向海外用户 |
+| 飞书 | ✅ 已实现 | `lark-oapi` 长连接（`feishu/feishu_channel.py`） | 免公网 IP，个人可建自建应用；需 `pip install lark-oapi` |
+| 企业微信 | ⚠️ 部分可用 | 主动推送可用；接收需公网回调（`wecom/wecom_channel.py`） | 与"免公网"定位冲突，仅建议单向推送 |
 
 详细计划见 [ROADMAP.md](ROADMAP.md)。
 
@@ -112,18 +113,20 @@ notepad config.json   # 填 owner_qq / bot_qq，路径可按需调整
 
 ### 3. 启动
 
-先确保桌面 Codex 开着（CDP 9229 可访问），再：
+先确保桌面 Codex 开着（CDP 9229 可访问），再在仓库根目录：
 
 ```powershell
-cd qq
-python bridge.py
+# 单渠道：QQ
+python main.py --channel qq
+
+# 多渠道：跑 config.json 里配置的所有渠道
+python main.py --channel all
 ```
 
 无窗口启动（推荐，配合计划任务/快捷方式）：
 
 ```powershell
-cd qq
-pythonw bridge.py
+pythonw main.py --channel all
 ```
 
 日志写入 `bridge.out.log` / `bridge.err.log`（位置由 `codex.log_dir` 控制）。
@@ -132,15 +135,19 @@ pythonw bridge.py
 
 ```powershell
 # 主动推送消息到你的 QQ
-cd qq
-python bridge.py --send "任务完成了" --to 123456
+python main.py --send "任务完成了" --to 123456
 
 # 发送文件到你的 QQ
-python bridge.py --send-file "D:\报告.pdf" --to 123456
+python main.py --send-file "D:\报告.pdf" --to 123456
 
 # 指定配置文件
-python bridge.py --config D:\my-config.json
+python main.py --config D:\my-config.json --channel qq
+
+# 指定渠道发送（如 telegram）
+python main.py --channel telegram --send "hello" --to 123456
 ```
+
+> 多渠道并存：`config.json` 的 `channels` 下可以同时配置多个渠道，`--channel all` 会为每个渠道启动一个引擎线程，共用同一套会话 / 队列 / 可选项协议。
 
 ## 常见问题
 
@@ -170,19 +177,27 @@ Windows 上 NapCat 注入 QQ 需要管理员权限。建议把 NapCat 的启动�
 codex-qq-bridge/
 ├── README.md            # 项目说明（亮点 / 架构 / 快速开始）
 ├── ROADMAP.md           # 多渠道扩展规划
+├── main.py              # 统一入口（--channel / --channel all）
+├── config.example.json  # 多渠道统一配置模板
 ├── LICENSE              # MIT
 ├── .gitignore
-├── core/                # 核心引擎（P1 待启动：Channel 接口 / 会话 / CDP）
+├── core/                # 核心引擎（Channel 接口 / CodexEngine / 会话 / CDP / 配置）
+│   ├── channel.py
+│   ├── config.py
+│   ├── engine.py
+│   ├── cdp.py
+│   └── registry.py
 ├── qq/                  # QQ 渠道（一期，已实现）
 │   ├── bridge.py        # 主桥接（配置化）
 │   ├── cdp.py           # 极简 CDP 客户端
+│   ├── qq_channel.py    # Channel 适配器（OneBot 11）
 │   ├── config.example.json
 │   ├── install.ps1      # 一键部署脚本
 │   └── requirements.txt
-├── mail/                # 邮件渠道（P2 规划中：IMAP/SMTP）
-├── telegram/            # Telegram 渠道（P3 规划中：Bot API）
-├── wecom/               # 企业微信渠道（P4 远期）
-└── feishu/              # 飞书渠道（P4 远期）
+├── mail/                # 邮件渠道（已实现：IMAP/SMTP）
+├── telegram/            # Telegram 渠道（已实现：Bot API）
+├── wecom/               # 企业微信渠道（部分可用：仅主动推送）
+└── feishu/              # 飞书渠道（已实现：lark-oapi 长连接）
 ```
 
 ## 风险声明（务必阅读）
