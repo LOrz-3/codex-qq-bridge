@@ -1,0 +1,5 @@
+# 核心依赖（QQ / mail / telegram 渠道仅需 websocket-client）
+websocket-client>=1.6.0
+
+# 可选：飞书渠道需要 lark-oapi
+# pip install lark-oapi
