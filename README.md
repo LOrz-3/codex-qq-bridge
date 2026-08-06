@@ -81,6 +81,7 @@
 **方式 A（推荐）：一键脚本**
 
 ```powershell
+cd qq
 .\install.ps1
 ```
 
@@ -89,7 +90,8 @@
 **方式 B（手动）**
 
 ```powershell
-# 在仓库目录执行
+# 在仓库 qq/ 目录执行
+cd qq
 python -m pip install -r requirements.txt
 copy config.example.json config.json
 notepad config.json   # 填 owner_qq / bot_qq，路径可按需调整
@@ -113,12 +115,14 @@ notepad config.json   # 填 owner_qq / bot_qq，路径可按需调整
 先确保桌面 Codex 开着（CDP 9229 可访问），再：
 
 ```powershell
+cd qq
 python bridge.py
 ```
 
 无窗口启动（推荐，配合计划任务/快捷方式）：
 
 ```powershell
+cd qq
 pythonw bridge.py
 ```
 
@@ -128,6 +132,7 @@ pythonw bridge.py
 
 ```powershell
 # 主动推送消息到你的 QQ
+cd qq
 python bridge.py --send "任务完成了" --to 123456
 
 # 发送文件到你的 QQ
@@ -163,13 +168,16 @@ Windows 上 NapCat 注入 QQ 需要管理员权限。建议把 NapCat 的启动�
 
 ```
 codex-qq-bridge/
-├── bridge.py            # 主桥接（配置化）
-├── cdp.py               # 极简 CDP 客户端
-├── config.example.json  # 配置模板
-├── install.ps1          # 一键部署脚本（自检 + 引导）
-├── requirements.txt     # 依赖（websocket-client）
+├── README.md            # 项目说明（亮点 / 架构 / 快速开始）
+├── ROADMAP.md           # 多渠道扩展规划
 ├── LICENSE              # MIT
-└── README.md
+├── .gitignore
+└── qq/                  # QQ 渠道（一期）
+    ├── bridge.py        # 主桥接（配置化）
+    ├── cdp.py           # 极简 CDP 客户端
+    ├── config.example.json
+    ├── install.ps1      # 一键部署脚本
+    └── requirements.txt
 ```
 
 ## 风险声明（务必阅读）
