@@ -325,6 +325,15 @@ class CodexEngine:
             return
         if self.owner and str(msg.sender) != self.owner:
             return
+        if not getattr(self.channel, "inbound_commands_enabled", True):
+            # read-only / outbound-only channel: never execute commands from
+            # inbound messages (spoofing / injection risk). Log and drop.
+            print(
+                "[engine] channel %s is outbound-only, ignoring inbound msg from %s: %r"
+                % (getattr(self.channel, "name", "?"), msg.sender, (msg.text or "")[:60]),
+                flush=True,
+            )
+            return
         # files first
         for fdata in msg.files:
             saved = self.save_received_file(fdata)

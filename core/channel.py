@@ -31,9 +31,15 @@ class Channel:
     The engine drives the loop: it calls start(handler) once, then the
     adapter is responsible for calling handler(IncomingMessage) whenever a
     message arrives. Replies go out through send_text / send_file.
+
+    inbound_commands_enabled: set False for channels that must be treated as
+    read-only / outbound-only (e.g. mail, which is easy to spoof). When False,
+    the engine ignores inbound messages entirely (logs only) - no command is
+    executed, nothing is injected, nothing is queued.
     """
 
     name = "base"
+    inbound_commands_enabled = True
 
     def __init__(self, config=None):
         self.config = config or {}
