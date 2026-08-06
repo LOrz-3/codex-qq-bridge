@@ -1,0 +1,53 @@
+{
+  "_comment": "多渠道统一配置。复制为 config.json 后填写。owner 是唯一允许遥控你的 QQ/账号；channels 下每个渠道一段，启用哪个就运行哪个。",
+  "owner": "你的QQ号",
+  "codex": {
+    "cdp_port": 9229,
+    "threads_db": "D:/.codex/state_5.sqlite",
+    "codex_dir": "D:/.codex",
+    "legacy_codex_dir": "C:/Users/<你的用户名>/.codex",
+    "log_dir": ".",
+    "page_title": "Codex"
+  },
+  "paths": {
+    "queue_dir": "D:/.codex/feedback",
+    "files_dir": "D:/.codex/files"
+  },
+  "tuning": {
+    "poll_interval_sec": 2.5,
+    "choice_ttl_minutes": 30
+  },
+  "channels": {
+    "qq": {
+      "ws_url": "ws://127.0.0.1:3001",
+      "bot_qq": "小号QQ号"
+    },
+    "mail": {
+      "imap_host": "imap.qq.com",
+      "imap_port": 993,
+      "smtp_host": "smtp.qq.com",
+      "smtp_port": 465,
+      "user": "你的QQ邮箱@qq.com",
+      "auth_code": "16位授权码",
+      "poll_interval_sec": 60
+    },
+    "telegram": {
+      "bot_token": "123456:ABC-...",
+      "owner_id": "你的 telegram user id"
+    },
+    "feishu": {
+      "app_id": "cli_xxxxxxxx",
+      "app_secret": "xxxxxxxx",
+      "owner_id": "你的 open_id"
+    },
+    "wecom": {
+      "corp_id": "wwxxxxxxxx",
+      "agent_id": "1000002",
+      "secret": "xxxxxxxx",
+      "owner_id": "你的 userid",
+      "callback_token": "",
+      "encoding_aes_key": "",
+      "callback_port": 8588
+    }
+  }
+}
