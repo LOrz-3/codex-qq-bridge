@@ -81,7 +81,7 @@ foreach ($f in $Files) {
 }
 
 # 4. open PR (or update the existing one with the same head/base)
-$existing = Invoke-Gh "GET" "/pulls?head=$Repo`:$Branch&state=open"
+$existing = Invoke-Gh "GET" ("/pulls?head={0}&state=open" -f $Branch)
 if ($existing -and $existing.Count -gt 0) {
     $pr = $existing[0]
     $null = Invoke-Gh "PATCH" ("/pulls/" + $pr.number) @{ title = $Title; body = $PrBody }
