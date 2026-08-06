@@ -8,11 +8,12 @@
 | 阶段 | 内容 | 状态 |
 |---|---|---|
 | P0 | 一期：QQ 渠道（NapCat / OneBot 11），配置化 + 一键部署 | ✅ 已发布 |
-| P1 | Channel 抽象层：把 QQ 逻辑抽成 adapter，核心引擎与渠道解耦 | 📋 待启动 |
-| P2 | 邮件渠道（QQ 邮箱 IMAP/SMTP） | 📋 待启动 |
-| P3 | Telegram 渠道（官方 Bot API） | 📋 待启动 |
-| P4 | 企业微信 / 飞书（官方 API，国内正规渠道） | 💡 远期 |
-| P5 | 多渠道并存 + 消息路由 + 统一 CLI（`--channel`） | 💡 远期 |
+| P1 | Channel 抽象层：把 QQ 逻辑抽成 adapter，核心引擎与渠道解耦 | ✅ 已完成（core/ + main.py） |
+| P2 | 邮件渠道（QQ 邮箱 IMAP/SMTP） | ✅ 已完成（mail/mail_channel.py） |
+| P3 | Telegram 渠道（官方 Bot API） | ✅ 已完成（telegram/telegram_channel.py） |
+| P4 | 飞书（长连接）+ 企业微信（评估，需公网回调） | ✅ 已完成（feishu/ + wecom/） |
+| P5 | 多渠道并存 + 统一 CLI（`--channel` / `--channel all`） | ✅ 已完成 |
+| P6 | 消息路由、多渠道回推、真实账号联调 | 📋 待启动 |
 
 ---
 
